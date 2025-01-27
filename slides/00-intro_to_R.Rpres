@@ -1,0 +1,164 @@
+An Introduction to data manipulation in R
+============================
+transition: none
+css: custom.css
+autosize: true
+
+Jessica L. O'Connell
+
+Download/Install materials from **https://github.com/jloconnell/Intro_to_R**
+
+Learning Objectives
+==============
+* why program/ why use R
+* Base R suggestions
+
+
+Learning Objectives
+==============
+* **why program/ why use R**
+* Base R suggestions
+
+Why program?
+==========
+* get more done in less time and with less pain
+* a record of your data steps
+* extensible, learn over time
+* repeatable
+* open source: puts the knowledge of the science community at your finger tips
+* creative: if you can imagine it, you can probably program it
+
+Which programming language?
+============
+* The one your colleagues already use
+* An open source language (not MatLab)
+  - “free as in beer”: 
+     + it costs nothing
+  - “free as in speech”: 
+     + the right to see how the software works
+     + the right to redistribute and improve/contribute
+* We'll learn R today, but it's similar to other programming languages (Python, JavaScript)
+
+Why R?
+============
+* It's a fully-featured programming language with rich statistics functions
+* It's open-source
+* It has many geospatial and machine learning libraries
+ - "Yes, there's an R package for that"
+
+Programming has a learning curve
+============
+* slow to create the first script
+* fast to use the script to repeat the steps
+* our goal is to learn:
+  - some programming basics
+  - create some code recipes
+* you won't learn everything now; be patient with yourself
+
+More resources
+===============
+* Cran: https://cran.r-project.org/manuals.html
+* Swirl: R package that teaches R basics through easy interactive learning
+* Software Carpentry: https://swcarpentry.github.io/r-novice-inflammation/
+* Data Carpentry: https://datacarpentry.org/R-ecology-lesson/index.html
+* Hadley Wickham, R for Data Science: https://r4ds.had.co.nz/
+
+
+Learning Objectives
+==============
+* why program/ why use R
+* **Base R suggestions**
+
+
+
+Object-oriented programming basics
+==============
+* data are stored as objects
+* data has types and structures
+* functions: a set of steps to apply to data
+* data can be read in from disk, manipulated via functions, and written out to disk
+* plotting: data can be visualized, plots can be saved to disk
+* for loops: quick repeating of steps
+* if statements: conditional application of code- if condition met, then do something 
+
+Base R advantages
+===============
+* it is worth **really** learning base R
+* Every symbol in base R has one and only one meaning (see cheatsheat)
+  - must learn when to use each
+  - function(arg1=, arg2=)
+  - the paraenthesis are only for functions, = is only for function arguments
+  - use == for an equality (x == y, true or false); also <=; !=, <, etc (!= is does not equal)
+  - use <- for object assignment
+  - x <-10; read as 'x "store as" 10'
+  - dat[1,2]; brackets are used for subsetting, here we grab a cell out of dataset dat
+  - iris[iris$Sepal.Length<5, ], subsets data iris to rows where column sepal length is <5
+  
+Base R spacing
+====================
+* R doesn't care about spaces, those are for you 
+* you can split code statements across multiple lines or not, as you like
+* R only cares that you opened a statement and closed it properly 
+  - eg: function() text string" " or { }
+* To put more than one function on the same line, use ;
+  -plot(1:10, 5:14); print('hi')
+  
+Most useful functions
+===============
+* get very comfortable with functions that help you visualize and summarize data
+```{r}
+data("iris")
+##get the dimensions of a data frame
+dim(iris); nrow(iris); ncol(iris)
+##get the length of a vector
+length(iris$Species)
+#see everything plotted against everything
+plot(iris)
+
+```
+
+Most useful functions: summary fxns
+===============
+```{r}
+
+#get the names of rows and columns
+names (iris); colnames(iris); rownames(iris)
+```
+
+Most useful functions: summary fxns
+===============
+```{r}
+#what kind of object is iris and it's constituent columns
+class(iris)
+class(iris$Species)
+class(iris$Sepal.Length)
+```
+
+Most useful functions: summary fxns
+===============
+```{r}
+##summarize a data frame and see column data types
+table(iris$Species)
+summary(iris)
+str(iris)
+```
+
+Most useful functions: summary fxns
+===============
+```{r}
+##see inside a data frame, first and last rows
+head(iris) ##first 5 rows
+tail(iris) ##last 5 rows
+```
+
+
+What files do we use for code?
+=============================
+* scripts: a text file of computer instructions/ data steps, .txt, .r, .R, .js, .py
+  - you can source as script to run all its code at once 
+  - source(myscript.r)
+  - I usually put these scripts in the functions folder for the project with my custom functions
+* R markdown: mixes text and code for generating reports, manuscripts and vignettes
+  - can write your whole science manuscript with R Markdown
+
+

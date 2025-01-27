@@ -1,0 +1,329 @@
+R Programming: Functions, and control structures
+========================================================
+autosize: true
+transition: none
+css: custom.css
+
+Learning Objectives
+==============
+* functions: what to do?
+* control structures: 
+  - for loop: how many times to repeat?
+  - if: when to do it?
+
+Learning Objectives
+==============
+* **functions**: what to do?
+* control structures: 
+  - for loop: how many times to repeat?
+  - if: when to do it?
+
+Functions: what to do
+==============
+* Every data step is accomplished with functions
+* You can use built-in functions or define your own
+* Functions are a set of steps that are named and saved to use later
+
+Functions: what to do
+==============
+* How to define a function, psuedo-code:
+
+myfunction <- function(arg1, arg2 = default2) **{**
+
+    take arguments as inputs
+    do some data steps involving the arguments
+    return(an object)
+  
+**}**
+
+* arg1 must be supplies, has no default
+* arg2 will take on the default if you don't redefine it
+
+Functions: what to do
+==============
+* How to define a function, psuedo-code:
+
+myfunction <- function(arg1, arg2 = default2) **{**
+
+    take arguments as inputs
+    do some data steps involving the arguments
+    return(an object)
+  
+**}**
+
+* How to apply a function, psuedo-code:
+
+        x <- myfunction(arg1, arg2 = default2)
+
+* This will apply the data steps to arg1 and 2 and save the outcome as x
+
+
+
+Functions: what to do
+==============
+* an example function
+
+```{r}
+half.it<- function(x) {
+  y<-x/2
+  return(y)
+}
+
+myvector<-1:10
+myvector
+new.vect<-half.it(myvector)
+new.vect
+```
+
+Functions: Explore some known functions
+==============
+* type ?**function** at the command line to get its help page
+* ex: ?seq.Date
+* type **function** at the command line to print the function code
+
+
+
+Functions: Explore some known functions
+==============
+* ex: seq.Date()
+```{r}
+?seq.Date
+```
+
+![](seqDate_help.jpg)
+
+
+Functions: Explore some known functions
+==============
+* Take a moment to explore the help of some other functions, check the bottom of the help for examples
+
+Functions: Arguments
+==============
+* if you call the arguments in the default order, there's no need to specify the argument name
+* if you call them out of order, you need to specify the argument name
+* you can use the beginning of the argument name
+
+Functions: Arguments
+==============
+* valid ways to write function arguments
+```{r}
+##specify all argument names
+seq.Date(from=as.Date("2019-01-01"),to=as.Date("2019-01-10"), by=2)
+##leave argument names out, but put argments in the right order
+seq.Date(as.Date("2019-01-01"),as.Date("2019-01-10"), 2)
+##specify argments in a differnt order, use just the beginining of the arg. name
+seq.Date(t=as.Date("2019-01-10"),f=as.Date("2019-01-01"), b=2)
+```
+
+Functions: Arguments
+==============
+* arguments without defaults are required
+
+```{r, error=T}
+seq.Date(from=as.Date("2019-01-01"),to=as.Date("2019-01-10"))
+```
+
+* note that the error messages are useful
+* try searching the internet with the extact text of an error message
+
+
+Functions: Arguments
+=============
+* arguments with defaults will be set for you if you don't change them
+
+```{r, }
+?data.frame
+```
+  
+![](dataframe_help.png)
+  
+Functions: Arguments
+==============
+* arguments with defaults will be set for you if you don't change them
+* data.frame will default to setting characters as factors
+
+```{r}
+dat<-data.frame(id=c("a","b", "c"), x=1:3)
+str(dat)
+dat
+```
+  
+Factors: A quick warning
+==============
+* character vectors as factors are useful in some situations (models), but are often interpreted by functions as the underlying integers
+  
+```{r}
+  dat$id<-factor(dat$id)
+  str(dat)
+  dat$id<-ifelse(dat$id=="a","z",dat$id)
+  dat ##see that the factor levels have been inserted
+  dat<-data.frame(id=letters[1:3], x=1:3)
+  dat$id<-ifelse(dat$id=="a","z",as.character(dat$id))
+  dat
+```
+
+Class: it's useful to know it
+==============
+* as shown in the last example, many errors happen when a function expects one kind of data, but you gave another
+* class() is your friend, to figure out what type of data you started with, what you ended up with
+  - ?function will tell what kind of data was expected
+  - there are many functions to convert to a new data type [ as.character(), as.interger(), as.matrix(), etc]
+  - that is how you solve this kind of problem
+
+
+
+Functions: See the source code
+==============
+* your function half.it and the base r function rowMeans
+
+```{r}
+half.it
+rowMeans
+```
+
+Functions: Explore some known functions
+==============
+* ex: seq.Date(), see the source code
+```{r}
+seq.Date
+```
+
+Functions: what to do
+==============
+* Can make your own functions as complicated as you like
+
+```{r}
+calc_index_l8<-function(dat.frame){
+  ##This function assumes it is supplied with a data frame
+  ##This function needs a data frame with Landsat 8 bands as columns
+  ##The data frame should have the column names b1 for band1, etc.
+  ##The function will return remote sensing indices: NDVI, a Simple Ratio, SAVI
+  
+  ndvi<-(dat.frame$b5-dat.frame$b4)/(dat.frame$b5+dat.frame$b4) 
+  indices<-data.frame(ndvi=ndvi)
+  indices$sr<-(dat.frame$b5/dat.frame$b4)
+  indices$savi <- 1.5*(dat.frame$b5-dat.frame$b4) /
+                  (dat.frame$b5+dat.frame$b4+0.5)
+  return(indices)
+}
+```
+
+Functions: R practice on your own
+==============
+* With the last example as a code recipe, define a function that calculates broadband greenness veg indices
+  - for equations, use https://www.nv5geospatialsoftware.com/docs/BroadbandGreenness.html
+  - pick at least three
+  - do this for landsat 8 bands; you can find the band number table here:
+    https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C02_T1_L2#bands
+    - note that table defines band names as SR_Bx, to indicate surface reflectance band 1- 7
+    - wavelengths and band descriptions are also there. For your function, use "b1" to indicate band 1 and use the band descriptions to cross reference the broad band equations with your band table
+
+* Bonus: make a fake dataset called dat, with column names b1, b2...b7; apply your function to it
+  - functions need to do this are data.frame, perhaps rnorm
+* How can you add these indices as columns in your data? (see the combining data slides or the excel cheat sheet)
+* try this later as practice on your own
+
+
+
+Learning Objectives
+==============
+* **functions**: what to do?
+* control structures: 
+  - **for loop**: how many times to repeat?
+  - if: when to do it?
+
+Control Structures: for
+==============
+* Tells the computer to repeat something 
+* psuedo-code:
+
+for( val in sequence ) **{**
+
+    do some data steps on x[val]
+    
+**}**
+
+* above, val will take on the sequence values, iterating each time through the loop
+
+Control Structures: for
+==============
+```{r}
+x<-letters[1:3]
+x
+for(i in x){
+  print(paste("this one was", i))
+}
+```
+
+Control Stuctures: for
+==============
+* Practice: create your own for loop
+ come up with a loop that will just print the value of i 10 times
+
+* psuedo-code:
+
+for( ) **{**
+
+     print(           )
+    
+**}**
+
+
+
+Control Stuctures: for
+==============
+* can use for loops to collect a result
+```{r}
+## a loop to collect a new result
+x<-1:10
+
+##intialize a result vector
+result<-0
+for(i in 1:length(x)){
+  result[i]<- x[i]*x[i]
+  print(paste("i is", i, "and result[i] is", result[i]))
+}
+result
+```
+
+For loop: practice
+==============
+* see if you can plot the iris data with different colors by species via a for loop
+```{r, eval=F}
+colors<-c("red", "blue", "green")
+x<-unique(iris$Species)
+plot(iris$Sepal.Length[iris$Species=="setosa"], 
+     iris$Sepal.Width[iris$Species=="setosa"], 
+     xlab= "Sepal Length (mm)", ylab= "Sepal Width (mm)", 
+     pch=19, col=colors[1])
+
+```
+for( i in ??){
+
+    points(    some code here that plots points for other the species  )
+}
+
+* hint: replace ?? with a sequence, 
+* hint: for the points code, start with the code for adding points for one species 
+* you can also use the x vector we created in the first code chunk to index the species; to see this, try x[1] and x[i]
+
+
+For loop: more practice
+==============
+* see if you store the R squared results of multiple linear models in a vector called results
+* use the iris data set and regress Sepal Length against the other numeric vectors in turn
+```{r, eval=F}
+library(broom)
+summary(m<-lm(Sepal.Length ~Sepal.Width, data=iris))
+glance(m)
+rsq<-glance(m)[1]
+
+result<-0
+##for(i in ????:????)){
+##  summary(m<-lm(iris$Sepal.Length ~iris[,???]))
+##  result[i]<- glance(m)[1]
+##  print(paste("i is", i, "and result[i] is", result[i]))
+##}
+result
+
+```

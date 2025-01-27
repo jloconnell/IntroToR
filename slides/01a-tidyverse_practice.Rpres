@@ -1,0 +1,62 @@
+Learning Objectives
+==============
+  * **tidyverse**: a collection of packages to ease data science tasks
+
+tidyverse: an intuitive way to code data science tasks
+==============
+  * developed mostly by Hadley Wickham, who also developed RStudio
+* a naturally interacting set of packages with "a common data philosophy"
+* many of the libraries load together with **library(tidyverse)**
+  - dplyr, ggplot, stringr, etc
+* they can also be loaded individually
+* well described in "R for Data Science" at https://r4ds.had.co.nz
+* see also the many cheatsheets available under help in RStudio, or online at: https://rstudio.com/resources/cheatsheets/
+  * base R is often faster, but tidyverse is helpful when speed isn't needed
+
+tidyverse: a new way to code data science tasks
+==============
+
+```{r}
+library(tidyverse)
+head(arrange(iris, Sepal.Length))
+```
+
+tidyverse: dplyr for data manipulation
+==============
+* see the data transformation/dplyr cheat sheet
+* has functions that are "verbs" for data manipulation:
+    - filter() ; arrange (), select(), mutate(), summarise(); group_by()
+* the first function argument is the data frame, the next is the column name w/o any **" "** or **$**
+```{r}
+library(dplyr)
+filter(iris, Species=="setosa")
+```
+
+
+
+tidyverse: dplyr for data manipulation
+==============
+* several function-verbs can be joined together with the pipe symbol  %>% 
+* Note the new data structure, tibble; this is the tidyverse version of a data frame
+
+```{r}
+names(iris)
+iris %>% filter(Sepal.Width<3.3) %>% group_by(Species) %>% summarise(Sep.Len=mean(Sepal.Length))
+
+```
+
+tidyverse: practice
+==============
+* see if you can add another column summarizing other variables inside summarise()
+* To use the code below to get started, just remove the comment symbols **#**
+* can you summarise with other functions besides mean()? 
+  - Try sd(), sum(), +, /
+* what if you change the filter step?
+```{r, results=F, echo=T}
+iris %>% filter(Sepal.Width<3.3) %>% group_by(Species) %>% 
+  summarise(Sep.Len=mean(Sepal.Length) #,
+#           var.name= 
+             )
+
+```
+

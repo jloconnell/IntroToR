@@ -1,0 +1,488 @@
+How to use R: some of the very basics
+============================
+transition: none
+css: custom.css
+autosize: true
+
+Jessica L. O'Connell
+
+R is a calculator
+======================
+
+```{r}
+2+2
+2*4
+2^3
+```
+
+* Practice: can you use the symbols below?
+  
+  /  *  +   - 
+  
+  sqrt(4) , sum( 2, 4 ) , mean( 2,4 )
+
+How to use R: some basics
+======================
+  * R is object-oriented
+* tip: press Alt - (or Option - on Mac) to auto-insert **<-**
+  ```{r}
+x <- 2
+x
+y<- x+x
+y
+y<- sum(x,x,x)
+y
+```
+
+How to use R: some basics
+======================
+  * R can also handle text and character data
+
+```{r}
+x <- "Hello World"
+x
+```
+
+R data types: the type of variable
+======================
+  * character (text)
+* numeric (real or decimal)
+* integer (whole numbers)
+* logical (TRUE/FALSE)
+* dates/times
+* factors (special type of ordered character data)
+* some others
+
+R data structures: the type of object
+======================
+  - Vectors
+- Matrices
+- Data frames
+- Tibbles (a tidyverse data frame)
+- Some others
+
+
+Vectors
+======================
+  *  Vectors are a column of data, only one data type allowed (atomic)
+
+```{r}
+x <- 1:10
+x
+class(x)
+length(x)
+```
+
+Vectors
+======================
+  *  Vectors are a column of data, only one data type allowed (atomic)
+
+```{r}
+y<-c("a","b", "c")
+y
+class(y)
+length(y)
+```
+
+* Practice: use the examples to create a vector of numeric or logical data
+
+Matrices
+======================
+  * Matrix: an atomic vector with dimensions: the number of rows and columns
++ still atomic (only one data type allowed)
+
+```{r}
+m <- matrix(nrow = 2, ncol = 2)
+
+##note: NA is the data type for missing data
+m
+class(m)
+##what are the dimensions (rows, colunns)?
+dim(m)
+```
+
+* Why did the code above create a matrix of missing data?
+  
+  Matrices
+======================
+  * Matrix: an atomic vector with dimensions: the number of rows and columns
++ still atomic (only one data type allowed)
+
+```{r}
+m <- matrix(c(4, 4, 4, 4,3,2),  nrow = 2,  ncol = 3)
+m
+dim(m)
+```
+
+* Practice: use the examples to create a matrix filled with character data
+
+
+Data frame
+======================
+  * Data frame: the most common data type for tabular data
++ each column is atomic, but different columns can have different data types
++ each column has the same number of observations (rows)
++ each column has it's own name
+
+```{r}
+dat <- data.frame(id = letters[1:10], x = 1:10, y = 11:20)
+
+##see the top few rows
+head(dat)
+## see some summary info
+class(dat)
+dim(dat)
+```
+
+Data frame
+======================
+* see the data type, and dimensions (rows, columns), and the column names
+
+```{r}
+data("iris")
+class(iris)
+dim(iris)
+names(iris)
+```
+
+* Practice: use **head(** iris **)** to see which species is in the first few rows
+* What do you guess the function to see the last few rows is?
+
+
+Data frame
+======================
+* the first few rows with **head( )** and and the last few with **tail( )**
+
+```{r}
+head(iris)
+tail(iris)
+```
+
+
+Data frame
+======================
+* see the structure of all the data with **str( )**
+
+```{r}
+str(iris)
+```
+
+* cross tabulate one column with table
+
+```{r}
+table(iris$Species)
+```
+
+Data frame
+======================
+* see a summary of all the data with **summary( )**
+
+```{r}
+summary(iris)
+```
+
+Data frame
+======================
+* In R studio, you should have already typed the code: **data(iris)**
+* Look at the Environment tab in the top right box, did iris appear there?
+* Click on iris to see what happens
+* Notice everything else in the environment tab. These are the objects in memory now.
+
+
+Subsetting vectors
+============
+* Vectors are indexed with **[ ]**
+  + the number is the item position, starting from the right
+
+```{r}
+ y<-c("a","b", "c")
+y[1]
+y[c(1,3)]
+```
+
+Subsetting vectors
+===========
+ * Vectors are indexed with **[ ]**
+   + a negative index will show all **but** that item
+
+```{r}
+y<-c("a","b", "c")
+y
+y[-2]
+```
+
+Subsetting vectors
+=============
+* Vectors are indexed with **[ ]**
+    + a conditional index will grab values that meet a criteria
+
+```{r}
+x<-seq(1,20, by=2)
+x
+x[x<=7]
+x[x==7]
+```
+
+* Practice: can you grab the 5th item in the vector? 
+*     Try saving values of **x** greater than 10 as **y**
+
+Subsetting vectors
+=============
+* What if I want just **less than**, instead of **less than or equal**?
+
+Subsetting data
+=============
+* What if I want just **less than**, instead of **less than or equal**?
+
+```{r}
+x[x<7]
+```
+
+Subsetting vectors
+=============
+* What if I want to see the last item in the vector?
+
+Subsetting vectors
+=============
+* What if I want just the last item in the vector?
+
+```{r}
+length(x)
+x[length(x)]
+```
+
+Subsetting data frames and matrices
+============
+* Data frames and matrices are indexed by **row**, **column** inside [ ]
+
+```{r}
+dat <- data.frame(id = letters[1:10], x = 1:10, y = 11:20)
+head(dat)
+
+#row 1, column 2
+dat[1,2]
+
+```
+
+Subsetting data frames and matrices
+============
+* What if I want the first 5 rows in column 2?
+* What about all the rows in column 2?
+
+```{r}
+#first 5 rows, column 2
+dat[1:5,2]
+
+##all the rows, column2
+dat[ ,2]
+```
+
+* Practice: Try grabing the 2nd row and saving it as **z**
+* what kind of data is z? (try **class(** z **)** to see)
+
+Subsetting data frames and matrices
+============
+* You can also grab rows based on a condition
+
+```{r}
+
+##rows where x >5, column3
+dat[ dat$x>7, 2]
+```
+
+Subsetting data frames and matrices
+============
+* What if I want all the rows in column 1 ("id") where a different column, x, is greater than 8?
+
+```{r}
+##rows where x >8, column 1
+dat[dat$x>8, 1]
+dat$x>8
+```
+
+* Note: if you give R an index of TRUE and FALSE, it assumes you want to keep TRUE
+
+Subsetting data frames and matrices
+============
+* selectively replace rows in y where x meets a criteria
+
+```{r}
+##selectively replace rows where x >7 in  column3 with 100
+dat[ dat$x>7, 3]<-100
+tail(dat)
+```
+
+Subsetting data frames
+============
+* Data frames can also be subset by column name, with $
+
+```{r}
+dat <- data.frame(id = letters[1:10], x = 1:10, y = 11:20)
+dat$y
+dat[ , "y"]
+```
+
+Combining data: Vectors
+======================
+* c( ), for "combine" or "concatenate"
+
+```{r}
+x <- 1:3
+y<-c(5,6,7)
+z<- c(x,y)
+z
+```
+
+Combining data: data frames and matrices
+======================
+* append a row: **rbind( )**, append a column: **cbind( )**
+
+```{r}
+m <- matrix(c(4, 4, 4, 4),
+  nrow = 2,
+  ncol = 2)
+m
+y<-c(2,2)
+m<-rbind(m,y)
+m
+```
+
+* practice: create a vector and then use **cbind(** **)** to add it to your matrix. Look at the result.
+
+Combining data: data frames
+======================
+* add a new named column
+
+```{r}
+dat <- data.frame(plot = letters[1:3], band1 = rnorm(n=3, mean=0.1, sd=0.05), band2 = rnorm(n=3, mean=0.2, sd=0.06))
+head(dat)
+z<-rnorm(n=3, mean=0.15, sd=0.03); z
+dat$band3 <- z
+head(dat)
+```
+
+Combining data: data frames
+======================
+* how do I create a new column as a mathematical combo of other columns?
+
+```{r}
+dat$sr<-(dat$band2)/(dat$band3)
+head(dat)
+```
+
+* practice: create a new column in **dat** that is the normalized difference of two band columns 
+pseudo code: (x-y)/(x+y)
+
+
+Combining data: data frames
+======================
+* merge two data frames via a common column
+
+```{r}
+dat <- data.frame(date = seq.Date(from=as.Date("2019-01-01"), 
+                                  to=as.Date("2019-01-10"), by=2),  
+                  x = 1:5, y = 11:15)
+dat2<-data.frame(date = seq.Date(from=as.Date("2019-01-01"), 
+                                 to=as.Date("2019-01-05"), by=1),  
+                 z = seq(from=5, to=10, length.out=5))
+head(dat)
+head(dat2)
+```
+
+Combining data: data frames
+======================
+* merge two data frames via a common column
+
+```{r}
+dat<-merge(dat, dat2, by="date", all.x=TRUE, all.y=TRUE)
+head(dat)
+```
+
+* Practice: what happens if I change all.x or all.y to FALSE?
+
+Plotting data
+===============
+
+```{r, fig.height=5, fig.width=5}
+plot(iris$Sepal.Length[iris$Species=="setosa"], 
+     iris$Sepal.Width[iris$Species=="setosa"], 
+     xlab= "Sepal Length (mm)", ylab= "Sepal Width (mm)", 
+     cex.lab=1.5,       ##increase axis label font size
+     col="red", pch=19 , cex=1.5 ## symbol modifiers, pch is the symbol, cex is size, col is color
+     )
+```
+
+
+Plotting data: add more points
+===============
+```{r, fig.height=5, fig.width=5}
+plot(iris$Sepal.Length[iris$Species=="setosa"], 
+     iris$Sepal.Width[iris$Species=="setosa"], 
+     xlab= "Sepal Length (mm)", ylab= "Sepal Width (mm)", 
+     cex.lab=1.5,       ##increase axis label font size
+     col="red", pch=19 , cex=1.5 ## symbol modifiers, pch is the symbol, cex is size, col is color
+)
+points( iris$Sepal.Length[iris$Species=="versicolor"],   
+        iris$Sepal.Width[iris$Species=="versicolor"], 
+        col="blue", pch=1, cex=1.5)
+```
+
+
+Plotting data: adjust the plot
+===============
+* how can we use **summary( )** to figure out what the axis limits should be?
+
+```{r, echo=F}
+summary(iris)
+```
+
+Plotting data: adjust the plot
+===============
+```{r, fig.height=5, fig.width=5}
+plot(iris$Sepal.Length[iris$Species=="setosa"], 
+     iris$Sepal.Width[iris$Species=="setosa"],
+     xlab= "Sepal Length (mm)", ylab= "Sepal Width (mm)", 
+     cex.lab=1.5,       ##increase axis label font size
+     col="red", pch=19 , cex=1.5, ## symbol modifiers, pch is the symbol, cex is size, col is color
+     xlim=c(4.3,7.9), ylim=c(2,4.4))
+points( iris$Sepal.Length[iris$Species=="versicolor"], 
+        iris$Sepal.Width[iris$Species=="versicolor"], 
+        pch=1,  col="blue", cex=1.5)
+```
+
+Plotting data: adjust the plot
+===============
+* There's a third species. How can find out what it is and add it to the plot?
+  * Hint: try summary(iris), table(iris$Species), or levels(iris$Species)
+
+```{r, echo=F, fig.height=5, fig.width=5}
+plot(iris$Sepal.Length[iris$Species=="setosa"], 
+     iris$Sepal.Width[iris$Species=="setosa"],
+     xlab= "Sepal Length (mm)", ylab= "Sepal Width (mm)", 
+     cex.lab=1.5,       ##increase axis label font size
+     col="red", pch=19 , cex=1.5, ## symbol modifiers, pch is the symbol, cex is size, col is color
+     xlim=c(4.3,7.9), ylim=c(2,4.4))
+points( iris$Sepal.Length[iris$Species=="versicolor"], 
+        iris$Sepal.Width[iris$Species=="versicolor"], 
+        pch=1,  col="blue", cex=1.5)
+```
+
+Plotting data: add the third species
+===============
+  
+  ```{r, fig.height=5, fig.width=5}
+plot(iris$Sepal.Length[iris$Species=="setosa"], 
+     iris$Sepal.Width[iris$Species=="setosa"],  
+     xlab= "Sepal Length (mm)", ylab= "Sepal Width (mm)", 
+     cex.lab=1.5,       ##increase axis label font size
+     col="red", pch=19 , cex=1.5, ## symbol modifiers, pch is the symbol, cex is size, col is color
+     xlim=c(4.3,7.9), ylim=c(2,4.4))
+points( iris$Sepal.Length[iris$Species=="versicolor"], 
+        iris$Sepal.Width[iris$Species=="versicolor"], 
+        pch=1,  col="blue", cex=1.5)
+points( iris$Sepal.Length[iris$Species=="virginica"],   
+        iris$Sepal.Width[iris$Species=="virginica"], 
+        col="green", pch=3, cex=1.5)
+
+```
+

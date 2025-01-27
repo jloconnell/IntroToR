@@ -1,0 +1,140 @@
+---
+title: "Plotting RS data"
+author: "O'Connell, JL"
+date: "9/7/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "/home/jessica/CSU/Teaching/ESS_523d/Rprojects/IntroToR/")
+```
+
+```
+
+## Introduction to plotting Remote sensing data
+
+This is an R markdown document that allows you to weave text and code together. Let's start by setting the path to our project directory. 
+
+
+```{r directory}
+##set working directory and load libraries
+library(paletteer)
+library(tidyverse)
+setwd( "/home/jessica/CSU/Teaching/ESS_523d/Rprojects/IntroToR/" )
+
+```
+
+At that path, we should have a directory that contains all project files to keep things organized. The project folder structure looks something like this:
+
+Project folder:
+
+data: folder for all raw data, never manipulated, always preserved
+
+documents: folder for manuscripts, markdown documents and other text based documentation
+
+analysis: folder for all R scripts/code files; we use these code files to change and process the raw data as needed too.
+
+output: folder where all output from code gets saved. This is where processed data is found
+
+results: figures and tables created by code can get saved here
+
+**Never** scatter all your files around your computer. This is always bad practice, but especially bad practice for remote sensing data. Keep all files that belong to the same project in a common directory in a well organized structure. 
+
+## Plotting some data
+
+Let's create a plot of RS data, to get us warmed up. First load the data. Note that since we set our working directory, we can now use relative paths that assume we are in that directory.
+
+```{r loadData, echo=T}
+##load Hadley wickham's tidyverse library which has lots of helpful functions. See the R for data science book in your syllabus. 
+
+##load some data collected with a field hyperspectral radiometer
+dat<-read_csv("data/seagrant_reflect_05032016.csv")
+
+##examine the data
+names(dat)
+str(dat)
+head(dat)
+summary(dat)
+```
+
+OK. We've seen what the data look like and what the column names are. Now lets plot the first two columns
+
+```{r plotData, echo=T}
+
+plot(dat$wave, dat$s1, pch=19, cex=1.5, xlab= "wavelength (nm)", ylab="reflectance", col="blue")
+
+```
+
+
+Try adding some of the samples to the plot as additional lines; If you prefer ggplot to base R plotting, feel free to use that
+
+```{r moreplot, echo=T}
+
+##cex is the symbol size, cex.lab is the axis label size
+plot(dat$wave, dat$s1, pch=19, cex=1.5,  col="blue", ylim=c(0,30),
+xlab= "wavelength (nm)", ylab="reflectance",cex.lab=1.5)
+
+##add a new row of point data onto an existing plot
+points(dat$wave, dat$s2, pch=19, cex=1.5,  col="red")
+
+```
+
+Advanced: can you write a for loop to plot all of the samples on the same plot, where each line a different color? Hint: you can try terrain.colors(n) or heat.colors(n) to generate an object of color values to use, where n is the number of colors; You can also grab a column in a data frame or tribble by using its column number.
+
+
+
+```{r advancedPlot, echo=T}
+dat<-data.frame(dat)
+##set up your color scheme, below we make a color ramp with as many columns as our data
+color<-terrain.colors(ncol(dat))
+
+##what colors are these?
+plot(1:ncol(dat), pch=19, cex=2, col=color)
+
+##another color ramp
+color<-heat.colors(ncol(dat))
+##what colors are these?
+plot(1:ncol(dat), pch=19, cex=2, col=color)
+
+##even more color ramps are in the package paletteer; Install first if you need to
+##see https://r-charts.com/color-palettes/
+color<-paletteer_c("ggthemes::Red-Green-Gold Diverging", ncol(dat)) 
+
+##plot the first series in the first color
+plot(dat$wave, dat$s1, pch=19, cex=1.5,  col=color[1], ylim=c(0,40),
+xlab= "wavelength (nm)", ylab="reflectance",cex.lab=1.5)
+
+##use a for loop to add in other reflectance profiles from other columns, plotted in new colors
+for (i in 3:(ncol(dat)-1)) {
+###fill in XX, YY and ?? with what you think should go there; 
+points(dat$wave, dat[,i], pch=19, cex=1.5,  col=color[i])
+}
+
+legend("topright",pch=19, col=color, legend=colnames(dat)[2:(ncol(dat)-1)], title="plot")
+```
+
+
+
+```{r savePlot, echo=T}
+
+##output the plot to a file to save on your computer
+##first line is the type of file, path to file, and file name
+jpeg("results/myplot.jpeg", width=6, height=6, units="in", res=180)
+
+plot(dat$wave, dat$s1, pch=19, cex=1.5,  col=color[1], ylim=c(0,40),
+xlab= "wavelength (nm)", ylab="reflectance",cex.lab=1.5)
+
+##use a for loop to add in other reflectance profiles from other columns, plotted in new colors
+for (i in 3:(ncol(dat)-1)) {
+###fill in XX, YY and ?? with what you think should go there; 
+points(dat$wave, dat[,i], pch=19, cex=1.5,  col=color[i])
+}
+
+legend("topright",pch=19, col=color, legend=colnames(dat)[2:(ncol(dat)-1)], title="plot")
+
+##the line below closes the plotting device and saves the file
+dev.off()
+
+
+```
